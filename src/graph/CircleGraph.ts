@@ -379,18 +379,36 @@ export class CircleGraph {
       rootNode.x = 0;
       rootNode.y = 0;
     }
-    const ringGap = 98;
+    /** Расстояние между центрами соседей на кольце: 2·R·sin(π/k) ≥ 2·r + pad */
+    const padBetweenNodes = 16;
+    /** Зазор от внешнего края предыдущего слоя до центров следующего кольца */
+    const padFromPrevRing = 20;
+
+    let outerClearance = rootNode?.r ?? 0;
+
     for (let d = 1; d <= maxD; d++) {
       const row = byDepth.get(d);
       if (!row?.length) continue;
-      const R = ringGap * d;
       const k = row.length;
+      const maxR = Math.max(...row.map((n) => n.r));
+
+      let R: number;
+      if (k === 1) {
+        R = outerClearance + maxR + padFromPrevRing;
+      } else {
+        const R_fromAngle = (maxR + padBetweenNodes) / Math.sin(Math.PI / k);
+        const R_clearPrev = outerClearance + maxR + padFromPrevRing;
+        R = Math.max(R_fromAngle, R_clearPrev);
+      }
+
       for (let j = 0; j < k; j++) {
         const node = row[j]!;
         const ang = (j / k) * Math.PI * 2 - Math.PI / 2;
         node.x = Math.cos(ang) * R;
         node.y = Math.sin(ang) * R;
       }
+
+      outerClearance = R + maxR + padFromPrevRing;
     }
   }
 
