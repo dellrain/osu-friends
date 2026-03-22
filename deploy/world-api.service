@@ -1,0 +1,15 @@
+[Unit]
+Description=osu friends (world graph SQLite + osu token exchange)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/osu-friends
+# Секреты и VITE_* для Node (dotenv) — см. .env на сервере
+EnvironmentFile=-/var/www/osu-friends/.env
+ExecStart=/usr/bin/npm run start:api
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
