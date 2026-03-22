@@ -55,6 +55,13 @@ function openDb() {
       PRIMARY KEY (user_a, user_b),
       CHECK (user_a < user_b)
     );
+    CREATE TABLE IF NOT EXISTS oauth_app_users (
+      osu_id INTEGER PRIMARY KEY,
+      username TEXT NOT NULL,
+      avatar_url TEXT NOT NULL DEFAULT '',
+      first_seen INTEGER NOT NULL,
+      last_seen INTEGER NOT NULL
+    );
   `);
   return db;
 }
@@ -77,6 +84,26 @@ const insertEdge = db.prepare(`
 const insertMutualEdge = db.prepare(`
   INSERT OR IGNORE INTO world_mutual_edges (user_a, user_b) VALUES (?, ?)
 `);
+
+/** Только владелец токена: кто подключил OAuth-приложение (не друзья из графа). */
+const upsertOAuthAppUser = db.prepare(`
+  INSERT INTO oauth_app_users (osu_id, username, avatar_url, first_seen, last_seen)
+  VALUES (@osu_id, @username, @avatar_url, @now, @now)
+  ON CONFLICT(osu_id) DO UPDATE SET
+    username = excluded.username,
+    avatar_url = excluded.avatar_url,
+    last_seen = excluded.last_seen
+`);
+
+function recordOAuthAppUser(me: WorldUser): void {
+  const now = Math.floor(Date.now() / 1000);
+  upsertOAuthAppUser.run({
+    osu_id: me.id,
+    username: me.username,
+    avatar_url: me.avatar_url ?? "",
+    now,
+  });
+}
 
 function mergeWorldContribution(me: WorldUser, friends: WorldFriend[]): void {
   const now = Math.floor(Date.now() / 1000);
@@ -149,6 +176,7 @@ async function handleContribute(
       return;
     }
     const me = (await meR.json()) as WorldUser;
+    recordOAuthAppUser(me);
     const frR = await fetch("https://osu.ppy.sh/api/v2/friends", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -188,6 +216,7 @@ async function handleContribute(
     );
     return;
   }
+  recordOAuthAppUser(body.me);
   mergeWorldContribution(body.me, body.friends);
   res.statusCode = 204;
   res.end();
@@ -242,6 +271,25 @@ async function handleOsuToken(req: IncomingMessage, res: ServerResponse): Promis
     body: params.toString(),
   });
   const text = await r.text();
+  if (r.ok) {
+    try {
+      const tok = JSON.parse(text) as { access_token?: string };
+      if (tok.access_token) {
+        const meR = await fetch("https://osu.ppy.sh/api/v2/me", {
+          headers: {
+            Authorization: `Bearer ${tok.access_token}`,
+            Accept: "application/json",
+          },
+        });
+        if (meR.ok) {
+          const me = (await meR.json()) as WorldUser;
+          recordOAuthAppUser(me);
+        }
+      }
+    } catch {
+      /* не ломаем ответ токена */
+    }
+  }
   res.statusCode = r.status;
   res.setHeader("Content-Type", "application/json");
   res.end(text);
