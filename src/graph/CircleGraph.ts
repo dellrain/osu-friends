@@ -10,6 +10,15 @@ import type { GraphViewMode } from "./viewModes";
 
 type LinkDatum = GraphLink;
 
+interface Bubble {
+  x: number;
+  y: number;
+  r: number;
+  alpha: number;
+  vy: number;
+  vx: number;
+}
+
 export type CircleGraphHandlers = {
   onNodeClick?: (userId: number, username: string) => void;
   onBackgroundClick?: () => void;
@@ -48,6 +57,9 @@ export class CircleGraph {
   private pinCenterId: number | null = null;
   private selectedUserId: number | null = null;
   private viewMode: GraphViewMode = "force";
+  private bubbles: Bubble[] = [];
+  private bubbleSpawnTimer = 0;
+  private lastPointerWorld = { x: 0, y: 0 };
 
   constructor(canvas: HTMLCanvasElement, handlers?: CircleGraphHandlers) {
     const ctx = canvas.getContext("2d");
@@ -122,6 +134,7 @@ export class CircleGraph {
     this.selectedUserId = null;
     this.sim.stop();
     this.images.clear();
+    this.bubbles = [];
 
     if (users.length === 0) {
       this.pinCenterId = null;
@@ -529,6 +542,11 @@ export class CircleGraph {
       const { x, y } = this.screenToWorld(e.clientX, e.clientY);
       this.dragging.fx = x;
       this.dragging.fy = y;
+      this.lastPointerWorld = { x, y };
+      this.bubbleSpawnTimer += 1;
+      if (this.bubbleSpawnTimer % 2 === 0) {
+        this.spawnBubbles(x, y, 1 + Math.floor(Math.random() * 2));
+      }
       if (this.viewMode !== "force") {
         this.dragging.x = x;
         this.dragging.y = y;
@@ -541,6 +559,12 @@ export class CircleGraph {
       const dy = (e.clientY - this.panStart.sy) * this.dpr;
       this.tx = this.panStart.tx + dx;
       this.ty = this.panStart.ty + dy;
+      const { x, y } = this.screenToWorld(e.clientX, e.clientY);
+      this.lastPointerWorld = { x, y };
+      this.bubbleSpawnTimer += 1;
+      if (this.bubbleSpawnTimer % 2 === 0) {
+        this.spawnBubbles(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 40, 1);
+      }
       this.draw();
     }
   };
@@ -638,18 +662,61 @@ export class CircleGraph {
     this.ty = h / 2 - cy * this.scale;
   }
 
+  private spawnBubbles(wx: number, wy: number, count: number): void {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * 30;
+      this.bubbles.push({
+        x: wx + Math.cos(angle) * dist,
+        y: wy + Math.sin(angle) * dist,
+        r: 1.5 + Math.random() * 4,
+        alpha: 0.4 + Math.random() * 0.4,
+        vy: -(0.3 + Math.random() * 0.7),
+        vx: (Math.random() - 0.5) * 0.4,
+      });
+    }
+  }
+
+  private updateBubbles(): void {
+    for (let i = this.bubbles.length - 1; i >= 0; i--) {
+      const b = this.bubbles[i]!;
+      b.x += b.vx;
+      b.y += b.vy;
+      b.vy -= 0.01;
+      b.vx += (Math.random() - 0.5) * 0.05;
+      b.alpha -= 0.008;
+      b.r *= 0.997;
+      if (b.alpha <= 0 || b.r < 0.3) {
+        this.bubbles.splice(i, 1);
+      }
+    }
+  }
+
   private draw(): void {
     const ctx = this.ctx;
     const w = this.canvas.width;
     const h = this.canvas.height;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = "#0d0d10";
+    ctx.fillStyle = "rgba(8, 18, 32, 0.5)";
     ctx.fillRect(0, 0, w, h);
+
+    this.updateBubbles();
 
     ctx.setTransform(this.scale, 0, 0, this.scale, this.tx, this.ty);
 
-    ctx.strokeStyle = "rgba(200,210,255,0.22)";
+    for (const b of this.bubbles) {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,230,255,${b.alpha * 0.5})`;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(b.x - b.r * 0.2, b.y - b.r * 0.3, b.r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${b.alpha * 0.3})`;
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = "rgba(100,200,230,0.18)";
     ctx.lineWidth = 1 / this.scale;
     for (const L of this.links) {
       const s = L.source;
@@ -673,13 +740,13 @@ export class CircleGraph {
         ctx.fill();
       }
       ctx.restore();
-      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.strokeStyle = "rgba(100,200,230,0.35)";
       ctx.lineWidth = 1.5 / this.scale;
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
       ctx.stroke();
       if (this.selectedUserId === n.id) {
-        ctx.strokeStyle = "rgba(255, 102, 171, 0.95)";
+        ctx.strokeStyle = "rgba(0, 180, 216, 0.95)";
         ctx.lineWidth = 3.5 / this.scale;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r + 4 / this.scale, 0, Math.PI * 2);

@@ -34,40 +34,62 @@ app.innerHTML = `
   <div class="shell">
     <header class="bar">
       <h1 class="title title-bar-heading">
-        <a class="brand-home-link" href="/" aria-label="Friends — главная страница">
+        <a class="brand-home-link" href="/" aria-label="прокат катамаранов — главная страница">
           <span class="brand-home-mark" aria-hidden="true">
-            <span class="header-osu-logo header-osu-logo--bg"></span>
-            <span class="header-osu-logo"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="display:block">
+              <rect x="3" y="16" width="7" height="3" rx="1.2"/>
+              <rect x="14" y="16" width="7" height="3" rx="1.2"/>
+              <rect x="4" y="12" width="16" height="4" rx="1"/>
+              <path d="M5 12 L7.5 7 L16.5 7 L19 12Z"/>
+              <rect x="11.5" y="7" width="1" height="4"/>
+            </svg>
           </span>
-          <span class="title-app-name">Friends</span>
+          <span class="title-app-name">прокат катамаранов</span>
         </a>
+        <span class="wheel-wrap" aria-hidden="true">
+          <svg class="steering-wheel" viewBox="0 0 100 100" width="32" height="32">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="4" opacity="0.5"/>
+            <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.4"/>
+            <g stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.5">
+              <line x1="50" y1="8" x2="50" y2="20"/>
+              <line x1="50" y1="80" x2="50" y2="92"/>
+              <line x1="8" y1="50" x2="20" y2="50"/>
+              <line x1="80" y1="50" x2="92" y2="50"/>
+              <line x1="20.3" y1="20.3" x2="29.3" y2="29.3"/>
+              <line x1="70.7" y1="70.7" x2="79.7" y2="79.7"/>
+              <line x1="20.3" y1="79.7" x2="29.3" y2="70.7"/>
+              <line x1="70.7" y1="29.3" x2="79.7" y2="20.3"/>
+            </g>
+          </svg>
+        </span>
+        <span class="minecraft-logo" aria-hidden="true">MINECRAFT</span>
       </h1>
       <div class="actions">
-        <button type="button" class="btn primary" id="btn-login">Войти через osu!</button>
-        <button type="button" class="btn ghost hidden" id="btn-logout">Выйти</button>
+        <button type="button" class="btn primary" id="btn-login">⛵ Войти через osu!</button>
+        <button type="button" class="btn ghost hidden" id="btn-logout">Отчалить ⛵</button>
       </div>
     </header>
     <nav class="tabs" aria-label="Режим графа">
       <button type="button" class="tab active" data-tab="friends">Мои друзья</button>
-      <button type="button" class="tab" data-tab="world">Весь мир</button>
+      <button type="button" class="tab" data-tab="world">Мировой океан</button>
     </nav>
     <div class="graph-mutual-options" id="graph-mutual-options">
       <div class="graph-mutual-row" id="friends-mutual-row">
         <label class="friends-mutual-label">
           <input type="checkbox" id="friends-mutual-only" />
-          <span>Мои друзья: только взаимные (как в osu!)</span>
+          <span>Мои друзья: только взаимные</span>
         </label>
       </div>
       <div class="graph-mutual-row hidden" id="world-mutual-row">
         <label class="friends-mutual-label">
           <input type="checkbox" id="world-mutual-only" />
-          <span>Весь мир: только связи с взаимной дружбой в osu!</span>
+          <span>Мировой океан: только взаимные связи</span>
         </label>
       </div>
     </div>
     <div class="main-stage">
       <div class="graph-area">
-        <canvas class="graph" id="graph-canvas" aria-label="Граф osu!"></canvas>
+        <canvas class="graph" id="graph-canvas" aria-label="Карта друзей"></canvas>
       </div>
     </div>
     <div class="floating-graph-tools">
@@ -121,6 +143,74 @@ app.innerHTML = `
           <div class="player-subpanel-body" id="pc-most-played-list"></div>
         </section>
       </div>
+    </div>
+    <div class="fish-deco fish-deco--1" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 120 60" class="fish-svg"><path d="M0,30 L30,10 L30,20 L80,20 Q100,10 120,30 Q100,50 80,40 L30,40 L30,50 Z" fill="rgba(0,180,216,0.3)" stroke="rgba(0,180,216,0.4)" stroke-width="1.5"/><circle cx="85" cy="25" r="3" fill="rgba(255,255,255,0.35)"/><path d="M80,20 Q95,30 80,40" fill="none" stroke="rgba(0,180,216,0.35)" stroke-width="1.5"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--2" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 120 60" class="fish-svg"><path d="M0,30 Q15,10 40,10 Q80,10 110,30 Q80,50 40,50 Q15,50 0,30 Z" fill="rgba(231,111,81,0.25)" stroke="rgba(231,111,81,0.4)" stroke-width="1.5"/><circle cx="30" cy="25" r="3.5" fill="rgba(255,255,255,0.3)"/><path d="M95,15 L120,30 L95,45" fill="none" stroke="rgba(231,111,81,0.35)" stroke-width="2"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--3" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 100 50" class="fish-svg"><path d="M0,25 L20,8 Q55,8 80,25 Q55,42 20,42 Z" fill="rgba(233,196,106,0.25)" stroke="rgba(233,196,106,0.4)" stroke-width="1.5"/><circle cx="25" cy="20" r="2.5" fill="rgba(255,255,255,0.3)"/><path d="M72,15 Q90,25 72,35" fill="none" stroke="rgba(233,196,106,0.35)" stroke-width="2"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--4" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 130 70" class="fish-svg"><ellipse cx="50" cy="35" rx="45" ry="20" fill="rgba(0,119,182,0.25)" stroke="rgba(0,119,182,0.4)" stroke-width="1.5"/><circle cx="25" cy="28" r="3" fill="rgba(255,255,255,0.3)"/><path d="M90,20 L120,35 L90,50" fill="none" stroke="rgba(0,119,182,0.35)" stroke-width="2.5"/><path d="M50,35 Q65,15 90,20" fill="none" stroke="rgba(0,119,182,0.25)" stroke-width="1.5"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--5" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 100 50" class="fish-svg"><path d="M0,25 L25,8 L60,8 Q90,8 100,25 Q90,42 60,42 L25,42 Z" fill="rgba(0,180,216,0.2)" stroke="rgba(0,180,216,0.3)" stroke-width="1.5"/><circle cx="35" cy="20" r="2.5" fill="rgba(255,255,255,0.25)"/><path d="M60,15 Q75,25 60,35" fill="none" stroke="rgba(0,180,216,0.3)" stroke-width="1.5"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--6" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 110 55" class="fish-svg"><path d="M10,27 Q30,5 60,8 Q90,10 105,27 Q90,45 60,47 Q30,50 10,27 Z" fill="rgba(231,111,81,0.2)" stroke="rgba(231,111,81,0.3)" stroke-width="1.5"/><circle cx="35" cy="22" r="3" fill="rgba(255,255,255,0.25)"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--7" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 80 40" class="fish-svg"><path d="M0,20 Q12,5 35,5 Q60,5 75,20 Q60,35 35,35 Q12,35 0,20 Z" fill="rgba(0,180,216,0.18)" stroke="rgba(0,180,216,0.28)" stroke-width="1.5"/><circle cx="20" cy="16" r="2" fill="rgba(255,255,255,0.25)"/><path d="M55,12 L72,20 L55,28" fill="none" stroke="rgba(0,180,216,0.28)" stroke-width="1.8"/></svg>
+    </div></div>
+    <div class="fish-deco fish-deco--8" aria-hidden="true"><div class="fish-swim">
+      <svg viewBox="0 0 140 70" class="fish-svg"><path d="M10,35 Q40,10 80,15 Q115,18 130,35 Q115,55 80,58 Q40,62 10,35 Z" fill="rgba(233,196,106,0.18)" stroke="rgba(233,196,106,0.28)" stroke-width="1.5"/><circle cx="45" cy="28" r="3.5" fill="rgba(255,255,255,0.25)"/><path d="M80,25 Q100,35 80,48" fill="none" stroke="rgba(233,196,106,0.28)" stroke-width="2"/></svg>
+    </div></div>
+    <div class="mc-item mc-item--diamond" aria-hidden="true">
+      <svg viewBox="0 0 40 40" class="mc-svg"><polygon points="20,2 36,14 30,36 10,36 4,14" fill="#5dc8ec" stroke="#3b8cb5" stroke-width="1.5"/><polygon points="20,2 36,14 20,20 4,14" fill="#7ee4ff" opacity="0.6"/></svg>
+    </div>
+    <div class="mc-item mc-item--pickaxe" aria-hidden="true">
+      <svg viewBox="0 0 40 40" class="mc-svg"><rect x="18" y="22" width="4" height="16" rx="1" fill="#6b4226" stroke="#4a2d18" stroke-width="1"/><polygon points="12,4 28,4 24,20 16,20" fill="#5dc8ec" stroke="#3b8cb5" stroke-width="1.5" transform="rotate(-15,20,12)"/></svg>
+    </div>
+    <div class="mc-item mc-item--grass" aria-hidden="true">
+      <svg viewBox="0 0 40 40" class="mc-svg"><rect x="4" y="20" width="32" height="16" fill="#6b4226" stroke="#4a2d18" stroke-width="1.5"/><rect x="4" y="4" width="32" height="16" fill="#5da832" stroke="#4a2d18" stroke-width="1.5"/></svg>
+    </div>
+    <div class="mc-item mc-item--sword" aria-hidden="true">
+      <svg viewBox="0 0 40 40" class="mc-svg"><rect x="17" y="4" width="6" height="22" rx="1" fill="#aaa" stroke="#777" stroke-width="1"/><rect x="14" y="26" width="12" height="4" rx="2" fill="#6b4226" stroke="#4a2d18" stroke-width="1"/><rect x="16" y="25" width="8" height="2" fill="#888"/></svg>
+    </div>
+    <div class="steve-character" aria-hidden="true">
+      <div class="steve-waving-arm">
+        <svg viewBox="0 0 40 50" class="steve-arm-svg">
+          <rect x="14" y="5" width="12" height="24" rx="3" fill="#c8915c" stroke="#8b5e3c" stroke-width="0.8"/>
+          <rect x="10" y="29" width="20" height="10" rx="3" fill="#66b5d1" stroke="#4a8ba3" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <svg viewBox="0 0 80 110" class="steve-head-svg">
+        <rect x="20" y="4" width="40" height="6" rx="1" fill="#c8915c" stroke="#8b5e3c" stroke-width="0.8"/>
+        <rect x="15" y="10" width="50" height="30" rx="2" fill="#c8915c" stroke="#8b5e3c" stroke-width="0.8"/>
+        <rect x="22" y="16" width="9" height="8" rx="1" fill="#2a2a2a"/>
+        <rect x="34" y="16" width="9" height="8" rx="1" fill="#2a2a2a"/>
+        <rect x="23" y="17" width="7" height="2" fill="#fff" opacity="0.35"/>
+        <rect x="35" y="17" width="7" height="2" fill="#fff" opacity="0.35"/>
+        <rect x="24" y="29" width="17" height="4" rx="1" fill="#2a2a2a"/>
+        <rect x="15" y="40" width="50" height="28" rx="2" fill="#66b5d1" stroke="#4a8ba3" stroke-width="0.8"/>
+        <rect x="5" y="40" width="12" height="28" rx="2" fill="#66b5d1" stroke="#4a8ba3" stroke-width="0.8"/>
+        <rect x="20" y="68" width="16" height="32" rx="2" fill="#3b5e8c" stroke="#2a4373" stroke-width="0.8"/>
+        <rect x="44" y="68" width="16" height="32" rx="2" fill="#3b5e8c" stroke="#2a4373" stroke-width="0.8"/>
+        <rect x="15" y="100" width="20" height="8" rx="2" fill="#5a3a1a" stroke="#3a2210" stroke-width="0.8"/>
+        <rect x="45" y="100" width="20" height="8" rx="2" fill="#5a3a1a" stroke="#3a2210" stroke-width="0.8"/>
+      </svg>
+      <div class="speech-bubble">
+        <span>Заходи, бро!</span>
+      </div>
+    </div>
+    <div class="wave-divider" aria-hidden="true">
+      <svg viewBox="0 0 1200 40" preserveAspectRatio="none" width="100%" height="40">
+        <path d="M0,20 C200,0 400,40 600,20 C800,0 1000,40 1200,20 L1200,40 L0,40 Z" fill="rgba(0,180,216,0.06)"/>
+        <path d="M0,30 C200,15 400,45 600,30 C800,15 1000,45 1200,30 L1200,40 L0,40 Z" fill="rgba(0,180,216,0.04)"/>
+      </svg>
     </div>
     <div class="status-dock" id="status-dock">
       <div class="view-mode-toolbar" role="toolbar" aria-label="Вид графа">
@@ -482,7 +572,7 @@ async function openPlayerCard(userId: number, fallbackName: string): Promise<voi
     cardProfileState = "unauth";
     playerFloatingPanel.classList.remove("hidden");
     pcName.textContent = fallbackName;
-    pcCountry.textContent = "Войдите через osu!";
+    pcCountry.textContent = "Войдите, капитан!";
     pcFlagWrap.classList.add("hidden");
     pcFlagWrap.setAttribute("aria-hidden", "true");
     pcAvatar.classList.add("hidden");
@@ -490,8 +580,8 @@ async function openPlayerCard(userId: number, fallbackName: string): Promise<voi
     pcPp.textContent = "—";
     pcPlaytime.textContent = "—";
     pcLocation.textContent = "—";
-    setListsPlaceholder(pcBestScoresList, "Войдите через osu!");
-    setListsPlaceholder(pcMostPlayedList, "Войдите через osu!");
+    setListsPlaceholder(pcBestScoresList, "Войдите, капитан!");
+    setListsPlaceholder(pcMostPlayedList, "Войдите, капитан!");
     syncPlayerCardProfileHits();
     return;
   }
@@ -875,7 +965,7 @@ function setActiveTab(tab: "friends" | "world"): void {
 
 async function renderFriendsTab(): Promise<void> {
   if (!cache) {
-    setStatus("Войдите через osu!, чтобы увидеть граф друзей.");
+    setStatus("Войдите, капитан, чтобы увидеть карту друзей.");
     await applyGraphFilter();
     return;
   }
@@ -920,7 +1010,7 @@ function refreshWorldStatusBar(): void {
 }
 
 async function renderWorldTab(): Promise<void> {
-  setStatus("Загрузка общего графа…");
+    setStatus("Загружаем мировой океан…");
   try {
     const payload = await fetchWorldGraph();
     worldRaw = {
@@ -999,7 +1089,7 @@ btnLogout.addEventListener("click", () => {
 
 async function bootstrap(): Promise<void> {
   if (await handleOAuthCallback()) {
-    setStatus("Вход выполнен.");
+    setStatus("Капитан на борту!");
   }
 
   const token = getStoredAccessToken();
